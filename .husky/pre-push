@@ -1,3 +1,10 @@
 echo "Running tests before pushing..."
 
-npm run test:silent
+TTY_FLAG=""
+if [ -t 1 ]; then
+  TTY_FLAG="-it"
+fi
+
+docker-compose run --rm --no-TTY test
+
+echo "Tests completed. Proceeding with push..."

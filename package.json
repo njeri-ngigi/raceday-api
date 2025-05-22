@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --silent --verbose",
+    "test": "docker-compose run --rm test",
     "test:silent": "jest --silent",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
