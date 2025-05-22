@@ -1,7 +1,7 @@
 echo "Running tests before pushing..."
-docker-compose run --rm --no-TTY test
+docker-compose -f docker-compose.test.yml run --rm --no-TTY test
 
 echo "Tests completed. Cleaning up..."
-docker-compose down -v
+docker-compose -f docker-compose.test.yml down -v --remove-orphans
 
 echo "Proceeding with push..."

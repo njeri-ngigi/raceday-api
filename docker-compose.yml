@@ -21,34 +21,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  test:
-    build:
-      context: .
-      dockerfile: Dockerfile.test
-    volumes:
-      - ./:/usr/src/app
-      - node_modules:/usr/src/app/node_modules
-    working_dir: /usr/src/app
-    command: npm run test:silent
-    depends_on:
-      - db-test
-    environment:
-      - DB_HOST=db-test
-      - NODE_ENV=test
-      - JWT_SECRET={$JWT_SECRET}
-
-  db-test:
-    image: postgres:14
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME_TEST}
-    ports:
-      - '5433:5432'
-    volumes:
-      - postgres_test_data:/var/lib/postgresql/data
-
 volumes:
   postgres_data:
-  postgres_test_data:
   node_modules:
