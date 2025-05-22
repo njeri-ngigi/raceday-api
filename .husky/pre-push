@@ -1,10 +1,7 @@
 echo "Running tests before pushing..."
-
-TTY_FLAG=""
-if [ -t 1 ]; then
-  TTY_FLAG="-it"
-fi
-
 docker-compose run --rm --no-TTY test
 
-echo "Tests completed. Proceeding with push..."
+echo "Tests completed. Cleaning up..."
+docker-compose down -v
+
+echo "Proceeding with push..."
