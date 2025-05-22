@@ -1,4 +1,4 @@
-name: Run sauti-pol Nestjs Tests
+name: Run raceday-api Nestjs Tests
 
 on:
   push:
