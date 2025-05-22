@@ -2,7 +2,6 @@ import { ROLE_REPOSITORY } from '../../core/constants';
 
 export const Roles = {
   ADMIN: 'admin',
-  CLERK: 'clerk',
   USER: 'user',
 } as const;
 

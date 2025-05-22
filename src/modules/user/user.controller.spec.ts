@@ -19,14 +19,11 @@ describe('UserController', () => {
   let regularUser: User;
   let adminToken: AuthDto;
   let regularToken: AuthDto;
-  let clerkToken: AuthDto;
 
   const newUser: SignupDto = {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+    name: faker.person.fullName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    phone: faker.phone.number(),
   };
 
   beforeAll(async () => {
@@ -45,29 +42,16 @@ describe('UserController', () => {
     const dbUser = await userService.createUser(newUser);
     adminUser = await userService.updateUserRole(dbUser.id, Roles.ADMIN);
 
-    // create clerk user
-    const clerkUser = await userService.createUser({
-      ...newUser,
-      email: faker.internet.email(),
-      phone: faker.phone.number(),
-    });
-    await userService.updateUserRole(clerkUser.id, Roles.CLERK);
-
     // create regular user
     regularUser = await userService.createUser({
       ...newUser,
       email: faker.internet.email(),
-      phone: faker.phone.number(),
     });
 
-    // generate admin, clerk and user access tokens
+    // generate admin and user access tokens
     adminToken = await mockModule
       .get(JwtProvider)
       .generateAccessToken(adminUser);
-
-    clerkToken = await mockModule
-      .get(JwtProvider)
-      .generateAccessToken(clerkUser);
 
     regularToken = await mockModule
       .get(JwtProvider)
@@ -85,7 +69,6 @@ describe('UserController', () => {
       const user = await userService.createUser({
         ...newUser,
         email: faker.internet.email(),
-        phone: faker.phone.number(),
       });
       expect(user.role).toBe(Roles.USER);
 
@@ -205,17 +188,6 @@ describe('UserController', () => {
             expect(response.body.message).toBe('insufficient permissions');
           });
       });
-
-      it('clerk user updates role', async () => {
-        await request(app.getHttpServer())
-          .put(`/users/${regularUser.id}/role`)
-          .set('Authorization', `Bearer ${clerkToken.accessToken}`)
-          .send({ role: Roles.ADMIN })
-          .expect(403)
-          .expect((response) => {
-            expect(response.body.message).toBe('insufficient permissions');
-          });
-      });
     });
   });
 
@@ -224,16 +196,6 @@ describe('UserController', () => {
       await request(app.getHttpServer())
         .get('/users')
         .set('Authorization', `Bearer ${adminToken.accessToken}`)
-        .expect(200)
-        .expect((response) => {
-          expect(response.body.length).toBeGreaterThanOrEqual(3);
-        });
-    });
-
-    it('should return all users if clerk', async () => {
-      await request(app.getHttpServer())
-        .get('/users')
-        .set('Authorization', `Bearer ${clerkToken.accessToken}`)
         .expect(200)
         .expect((response) => {
           expect(response.body.length).toBeGreaterThanOrEqual(3);

@@ -8,30 +8,9 @@ import { NextFunction, Request, Response } from 'express';
 
 @Injectable()
 export class SignupValidatorMiddleware implements NestMiddleware {
-  validatePhone(phone: string) {
-    // TODO validate email by sending a confirmation text
-
-    if (!phone) {
-      return;
-    }
-
-    const hasNonNumbers = /[^0-9]/.test(phone);
-    if (hasNonNumbers) {
-      throw new BadRequestException('phone must contain only numbers');
-    }
-
-    if (phone && phone.length !== 10) {
-      throw new BadRequestException('phone must be 10 digits');
-    }
-  }
-
-  validateNames(firstName: string, lastName: string) {
-    if (!firstName || firstName.trim().length === 0) {
-      throw new BadRequestException('firstName cannot be empty');
-    }
-
-    if (!lastName || lastName.trim().length === 0) {
-      throw new BadRequestException('lastName name cannot be empty');
+  validateNames(name: string) {
+    if (!name || name.trim().length === 0) {
+      throw new BadRequestException('name cannot be empty');
     }
   }
 
@@ -88,12 +67,11 @@ export class SignupValidatorMiddleware implements NestMiddleware {
   }
 
   use(req: Request, _: Response, next: NextFunction) {
-    const { email, password, phone, firstName, lastName } = req.body;
+    const { email, password, name } = req.body;
 
     this.validateEmail(email);
     this.validatePassword(password);
-    this.validateNames(firstName, lastName);
-    this.validatePhone(phone);
+    this.validateNames(name);
 
     req.body.password = this.saltPassword(password);
 

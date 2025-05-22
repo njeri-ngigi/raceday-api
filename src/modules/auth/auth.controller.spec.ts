@@ -11,11 +11,9 @@ describe('AuthController', () => {
   const validPassword = 'SomePassword123!';
   const accessToken = 'access-token';
   const defaultUser: SignupDto = {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+    name: faker.person.fullName(),
     email: faker.internet.email(),
     password: validPassword,
-    phone: '0711111111',
   };
   let app: INestApplication;
   let mockModule: TestingModule;
@@ -147,45 +145,9 @@ describe('AuthController', () => {
   describe('POST /auth/signup', () => {
     it('should signup a user successfully', async () => {
       const newUser: SignupDto = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
         password: validPassword,
-      };
-
-      await request(app.getHttpServer())
-        .post('/auth/signup')
-        .send(newUser)
-        .expect(201)
-        .expect((response) => {
-          expect(response.body.accessToken).toBe(accessToken);
-        });
-    });
-
-    it('should signup a user without a phone number successfully', async () => {
-      const newUser: SignupDto = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: validPassword,
-      };
-
-      await request(app.getHttpServer())
-        .post('/auth/signup')
-        .send(newUser)
-        .expect(201)
-        .expect((response) => {
-          expect(response.body.accessToken).toBe(accessToken);
-        });
-    });
-
-    it('should signup a user with a middle name successfully', async () => {
-      const newUser: SignupDto = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        email: faker.internet.email(),
-        password: validPassword,
-        middleName: faker.person.firstName(),
       };
 
       await request(app.getHttpServer())
@@ -198,61 +160,30 @@ describe('AuthController', () => {
     });
 
     describe('should return bad request error 400 if', () => {
-      it('first name is missing', async () => {
+      it('name is missing', async () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            lastName: defaultUser.lastName,
             email: defaultUser.email,
             password: defaultUser.password,
           })
           .expect(400)
           .expect((response) => {
-            expect(response.body.message).toBe('firstName cannot be empty');
+            expect(response.body.message).toBe('name cannot be empty');
           });
       });
 
-      it('first name is empty', async () => {
+      it('name is empty', async () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: '',
-            lastName: defaultUser.lastName,
+            name: '',
             email: defaultUser.email,
             password: defaultUser.password,
           })
           .expect(400)
           .expect((response) => {
-            expect(response.body.message).toBe('firstName cannot be empty');
-          });
-      });
-
-      it('last name is missing', async () => {
-        await request(app.getHttpServer())
-          .post('/auth/signup')
-          .send({
-            firstName: defaultUser.firstName,
-            email: defaultUser.email,
-            password: defaultUser.password,
-          })
-          .expect(400)
-          .expect((response) => {
-            expect(response.body.message).toBe('lastName name cannot be empty');
-          });
-      });
-
-      it('last name is empty', async () => {
-        await request(app.getHttpServer())
-          .post('/auth/signup')
-          .send({
-            firstName: defaultUser.firstName,
-            lastName: '',
-            email: defaultUser.email,
-            password: defaultUser.password,
-          })
-          .expect(400)
-          .expect((response) => {
-            expect(response.body.message).toBe('lastName name cannot be empty');
+            expect(response.body.message).toBe('name cannot be empty');
           });
       });
 
@@ -260,8 +191,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             password: defaultUser.password,
           })
           .expect(400)
@@ -274,8 +204,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: '',
             password: defaultUser.password,
           })
@@ -290,8 +219,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: invalidEmail,
             password: defaultUser.password,
           })
@@ -305,8 +233,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: defaultUser.email,
           })
           .expect(400)
@@ -319,8 +246,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: defaultUser.email,
             password: '',
           })
@@ -336,8 +262,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: defaultUser.email,
             password: invalidPassword,
           })
@@ -355,8 +280,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: defaultUser.email,
             password: invalidPassword,
           })
@@ -374,8 +298,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: defaultUser.email,
             password: invalidPassword,
           })
@@ -393,8 +316,7 @@ describe('AuthController', () => {
         await request(app.getHttpServer())
           .post('/auth/signup')
           .send({
-            firstName: defaultUser.firstName,
-            lastName: defaultUser.lastName,
+            name: defaultUser.name,
             email: defaultUser.email,
             password: invalidPassword,
           })
@@ -402,65 +324,6 @@ describe('AuthController', () => {
           .expect((response) => {
             expect(response.body.message).toBe(
               'password must contain at least one special character',
-            );
-          });
-      });
-
-      it('phone number is present and is less than 10 digits', async () => {
-        const shortPhoneNumber = '071234567';
-        const newUser: SignupDto = {
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          email: faker.internet.email(),
-          password: validPassword,
-          phone: shortPhoneNumber,
-        };
-
-        await request(app.getHttpServer())
-          .post('/auth/signup')
-          .send(newUser)
-          .expect(400)
-          .expect((response) => {
-            expect(response.body.message).toBe('phone must be 10 digits');
-          });
-      });
-
-      it('phone number is present and has more than 10 digits', async () => {
-        const longPhoneNumber = '07123456789';
-        const newUser: SignupDto = {
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          email: faker.internet.email(),
-          password: validPassword,
-          phone: longPhoneNumber,
-        };
-
-        await request(app.getHttpServer())
-          .post('/auth/signup')
-          .send(newUser)
-          .expect(400)
-          .expect((response) => {
-            expect(response.body.message).toBe('phone must be 10 digits');
-          });
-      });
-
-      it('phone number is present and has non-numbers', async () => {
-        const invalidPhoneNumber = '071234567a';
-        const newUser: SignupDto = {
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          email: faker.internet.email(),
-          password: validPassword,
-          phone: invalidPhoneNumber,
-        };
-
-        await request(app.getHttpServer())
-          .post('/auth/signup')
-          .send(newUser)
-          .expect(400)
-          .expect((response) => {
-            expect(response.body.message).toBe(
-              'phone must contain only numbers',
             );
           });
       });
@@ -473,41 +336,19 @@ describe('AuthController', () => {
         .expect(409)
         .expect((response) => {
           expect(response.body.message).toBe(
-            'User with email or phone already exists',
+            'User with email already exists',
           );
         });
     });
 
     it('should return conflict error 409 if user with email already exists', async () => {
-      const newUser: SignupDto = {
-        ...defaultUser,
-        phone: '0733333333', // different phone number
-      };
-
       await request(app.getHttpServer())
         .post('/auth/signup')
-        .send(newUser)
+        .send(defaultUser)
         .expect(409)
         .expect((response) => {
           expect(response.body.message).toBe(
-            'User with email or phone already exists',
-          );
-        });
-    });
-
-    it('should return conflict error 409 if user with phone already exists', async () => {
-      const newUser: SignupDto = {
-        ...defaultUser,
-        email: faker.internet.email(),
-      };
-
-      await request(app.getHttpServer())
-        .post('/auth/signup')
-        .send(newUser)
-        .expect(409)
-        .expect((response) => {
-          expect(response.body.message).toBe(
-            'User with email or phone already exists',
+            'User with email already exists',
           );
         });
     });

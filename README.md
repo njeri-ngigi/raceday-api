@@ -41,6 +41,10 @@ $ npm run start
 # watch mode
 $ npm run start:dev
 
+OR
+
+$ docker-compose up
+
 # production mode
 $ npm run start:prod
 ```
@@ -50,6 +54,10 @@ $ npm run start:prod
 ```bash
 # unit tests
 $ npm run test
+
+OR
+
+$ docker-compose run test
 
 # e2e tests
 $ npm run test:e2e

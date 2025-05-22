@@ -5,7 +5,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Op } from 'sequelize';
 import { isUUID } from 'validator';
 import { USER_REPOSITORY } from '../../core/constants';
 import { SignupDto } from '../dto/signup.dto';
@@ -30,28 +29,21 @@ export class UserService {
     return user;
   }
 
-  async findOneByEmailOrPhone({
+  async findOneByEmail({
     email,
-    phone,
-  }: Pick<SignupDto, 'email' | 'phone'>): Promise<User> {
+  }: Pick<SignupDto, 'email'>): Promise<User> {
     return await this.userModel.findOne<User>({
-      where: {
-        [Op.or]: [
-          email ? { email: { [Op.eq]: email } } : null,
-          phone ? { phone: { [Op.eq]: phone } } : null,
-        ],
-      },
+      where: { email },
     });
   }
 
   async createUser(user: SignupDto): Promise<User> {
-    const dbUserByEmailOrPhone = await this.findOneByEmailOrPhone({
+    const dbUserByEmail = await this.findOneByEmail({
       email: user.email,
-      phone: user.phone,
     });
 
-    if (dbUserByEmailOrPhone) {
-      throw new ConflictException('User with email or phone already exists');
+    if (dbUserByEmail) {
+      throw new ConflictException('User with email already exists');
     }
 
     return await this.userModel.create<User>(user);

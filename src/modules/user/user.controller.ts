@@ -19,7 +19,7 @@ export class UserController {
     return this.userService.updateUserRole(id, user.role);
   }
 
-  @RolesGuard(Roles.ADMIN, Roles.CLERK)
+  @RolesGuard(Roles.ADMIN)
   @Get()
   getAllUsers(): Promise<User[]> {
     return this.userService.findAll();

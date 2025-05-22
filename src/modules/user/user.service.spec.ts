@@ -10,11 +10,9 @@ describe('UserService', () => {
   let mockModule: TestingModule;
   let userService: UserService;
   const defaultUser: SignupDto = {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+    name: faker.person.fullName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    phone: faker.phone.number(),
   };
 
   beforeAll(async () => {
@@ -36,8 +34,7 @@ describe('UserService', () => {
   describe('findOneById', () => {
     it('should return a user with the id provided', async () => {
       const newUser: SignupDto = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
       };
@@ -68,28 +65,18 @@ describe('UserService', () => {
     });
   });
 
-  describe('findOneByEmailOrPhone', () => {
-    it('should return a user with the email and phone provided', async () => {
-      const user = await userService.findOneByEmailOrPhone({
+  describe('findOneByEmail', () => {
+    it('should return a user with the email provided', async () => {
+      const user = await userService.findOneByEmail({
         email: defaultUser.email,
-        phone: defaultUser.phone,
       });
 
       expect(user).toMatchObject(defaultUser);
     });
 
     it('should return a user if email only provided', async () => {
-      const user = await userService.findOneByEmailOrPhone({
+      const user = await userService.findOneByEmail({
         email: defaultUser.email,
-      });
-
-      expect(user).toMatchObject(defaultUser);
-    });
-
-    it('should return a user if phone only provided', async () => {
-      const user = await userService.findOneByEmailOrPhone({
-        email: null,
-        phone: defaultUser.phone,
       });
 
       expect(user).toMatchObject(defaultUser);
@@ -97,20 +84,17 @@ describe('UserService', () => {
 
     it('should return null if no user found', async () => {
       const nonExistentUserEmail = 'non-user@test.go.ke';
-      const nonExistentUserPhone = '11111';
 
-      const user = await userService.findOneByEmailOrPhone({
+      const user = await userService.findOneByEmail({
         email: nonExistentUserEmail,
-        phone: nonExistentUserPhone,
       });
 
       expect(user).toBe(null);
     });
 
-    it('should return null if no email or phone provided', async () => {
-      const user = await userService.findOneByEmailOrPhone({
+    it('should return null if no email provided', async () => {
+      const user = await userService.findOneByEmail({
         email: null,
-        phone: null,
       });
 
       expect(user).toBe(null);
@@ -120,8 +104,7 @@ describe('UserService', () => {
   describe('createUser', () => {
     it('should create a user', async () => {
       const newUser: SignupDto = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
       };
@@ -135,33 +118,15 @@ describe('UserService', () => {
       try {
         await userService.createUser(defaultUser);
       } catch (error) {
-        expect(error.message).toBe('User with email or phone already exists');
+        expect(error.message).toBe('User with email already exists');
       }
     });
 
     it('should throw a ConflictException if user with email already exists', async () => {
-      const newUser: SignupDto = {
-        ...defaultUser,
-        phone: faker.phone.number(),
-      };
-
       try {
-        await userService.createUser(newUser);
+        await userService.createUser(defaultUser);
       } catch (error) {
-        expect(error.message).toBe('User with email or phone already exists');
-      }
-    });
-
-    it('should throw a ConflictException if user with phone already exists', async () => {
-      const newUser: SignupDto = {
-        ...defaultUser,
-        email: faker.internet.email(),
-      };
-
-      try {
-        await userService.createUser(newUser);
-      } catch (error) {
-        expect(error.message).toBe('User with email or phone already exists');
+        expect(error.message).toBe('User with email already exists');
       }
     });
   });
@@ -169,8 +134,7 @@ describe('UserService', () => {
   describe('updateUserRole', () => {
     it('should update user role', async () => {
       const newUser: SignupDto = {
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
+        name: faker.person.fullName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
       };

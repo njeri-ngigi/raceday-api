@@ -23,19 +23,7 @@ export class User extends Model<User> {
     type: DataType.STRING,
     allowNull: false,
   })
-  firstName: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  middleName: string;
-
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  lastName: string;
+  name: string;
 
   @Column({
     type: DataType.STRING,
@@ -49,13 +37,6 @@ export class User extends Model<User> {
     allowNull: false,
   })
   password: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: true,
-    unique: true,
-  })
-  phone: string;
 
   @Column({ defaultValue: true })
   isActive: boolean;
