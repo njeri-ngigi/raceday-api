@@ -36,6 +36,7 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME_TEST: ${{ secrets.DB_NAME_TEST }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
         run: |
           docker-compose -f docker-compose.test.yml up --abort-on-container-exit --exit-code-from test
           docker-compose -f docker-compose.test.yml down -v --remove-orphans
