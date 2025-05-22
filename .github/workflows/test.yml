@@ -30,6 +30,18 @@ jobs:
           # Check the version:
           docker-compose --version
 
+      - name: Print DB env variables
+        run: |
+          echo ">>>> DB_USER=${DB_USER}"
+          echo ">>>> DB_PASSWORD=${DB_PASSWORD}"
+          echo ">>>> DB_NAME_TEST=${DB_NAME_TEST}"
+          echo ">>>> JWT_SECRET=${JWT_SECRET}"
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME_TEST: ${{ secrets.DB_NAME_TEST }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
       # Step 4: Build the Docker images and run the tests
       - name: Run tests with Docker Compose
         env:
