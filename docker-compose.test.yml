@@ -20,6 +20,11 @@ services:
 
   db-test:
     image: postgres:14
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', '${DB_USER}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
