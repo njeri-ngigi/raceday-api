@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile # optional if the file is named Dockerfile
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
     depends_on:
@@ -24,6 +24,11 @@ services:
   test:
     build:
       context: .
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    working_dir: /usr/src/app
     command: npm run test:silent
     depends_on:
       - db-test
@@ -46,3 +51,4 @@ services:
 volumes:
   postgres_data:
   postgres_test_data:
+  node_modules:
