@@ -12,19 +12,11 @@ services:
       - db-test
     environment:
       - DB_HOST=db-test
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME_TEST}
-      - JWT_SECRET=${JWT_SECRET}
       - NODE_ENV=test
+      - JWT_SECRET=${JWT_SECRET}
 
   db-test:
     image: postgres:14
-    healthcheck:
-      test: ['CMD', 'pg_isready', '-U', '${DB_USER}']
-      interval: 5s
-      timeout: 5s
-      retries: 5
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
