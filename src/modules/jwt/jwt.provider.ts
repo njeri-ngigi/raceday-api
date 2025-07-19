@@ -1,9 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthDto } from '../dto/auth.dto';
+import { TokensDto } from '../dto/auth.dto';
 import { User } from '../user/user.model';
 
-export type UserJWTPayload = Pick<User, 'email' | 'id'>;
+export type UserJWTPayload = Pick<User, 'email' | 'id' | 'role'>;
+
+type RefreshTokenPayload = {
+  sub: string; // user ID
+}
 
 @Injectable()
 export class JwtProvider {
@@ -25,9 +29,18 @@ export class JwtProvider {
     return payload;
   }
 
-  async generateAccessToken(user: UserJWTPayload): Promise<AuthDto> {
-    const payload = { email: user.email, id: user.id };
-    const accessToken = await this.jwtService.signAsync(payload);
-    return { accessToken };
+  async generateAccessToken(user: UserJWTPayload): Promise<TokensDto> {
+    const payload = { email: user.email, id: user.id, role: user.role };
+    const accessToken = await this.jwtService.signAsync(payload, { expiresIn: '1h' });
+    const refreshToken = await this.jwtService.signAsync({sub: user.id}, { expiresIn: '7d' });
+    return { accessToken, refreshToken };
+  }
+
+  async verifyToken(token: string): Promise<RefreshTokenPayload> {
+    try {
+      return this.jwtService.verify<RefreshTokenPayload>(token);
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }
