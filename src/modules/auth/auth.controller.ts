@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { PRODUCTION } from 'src/core/constants';
+import { PRODUCTION } from '../../core/constants';
 import { AuthDto } from '../dto/auth.dto';
 import { LoginDto } from '../dto/login.dto';
 import { SignupDto } from '../dto/signup.dto';

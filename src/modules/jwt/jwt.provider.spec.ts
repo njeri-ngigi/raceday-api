@@ -1,6 +1,7 @@
 import { JwtModule } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { JwtProvider, UserJWTPayload } from './jwt.provider';
+import { Roles } from '../user/role.provider';
 
 describe('JwtProvider', () => {
   let jwtProvider: JwtProvider;
@@ -19,6 +20,7 @@ describe('JwtProvider', () => {
       const user: UserJWTPayload = {
         id: 'cc74b118-7cb9-11ef-82ff-0b36fc6f2963',
         email: 'john.doe@test.com',
+        role: Roles.USER,
       };
       const token = await jwtProvider.generateAccessToken(user);
       const authHeader = await `Bearer ${token.accessToken}`;
